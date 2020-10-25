@@ -42,7 +42,7 @@ custom_filter["stocks_whitelist"] = ["intel"]
 ```
 
 ## Demo and Setup
-Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "Intel" (or start animated GIF [here](demo/demo-run-just-executing-from-commandline.gif)). Find there as well an example of an exported XLSX file. Apart from module requirements the initial setup is to set your individual cookie and you are ready to go ([cf. setup.md](setup/setup.md)).
+Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "Intel" (or start animated GIF [here](demo/demo-run-just-executing-from-commandline.gif)) and the corresponding exported XLSX file. Apart from module requirements the initial setup is to set your individual cookie and you are ready to go ([cf. setup.md](setup/setup.md)).
 
 ## Feature list
 
