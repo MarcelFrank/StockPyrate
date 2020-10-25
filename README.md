@@ -1,6 +1,6 @@
 ## StockPyrate
 
-A Yahoo Finance stock crawler with financial data analysis and visualization by Excel/XSLX file export.
+A Yahoo Finance stock crawler for financial data analysis and visualization with Excel/XSLX file export.
 
 ## Introduction
 
