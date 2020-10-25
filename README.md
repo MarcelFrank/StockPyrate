@@ -75,7 +75,7 @@ Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "
 - High, mean, low stock quote, date and percent delta for 2 weeks
 - High, mean, low stock quote, date and percent delta for 1 month...
 - ... up to 15 years
-- Number of days a stock needs to recover its price before ex date after dividend payment.
+- Number of days a stock needs to recover its before-ex-date-price after dividend payment.
 - Key facts based on statistics section at Yahoo Finance
 
 **Excel/XSLX file export**
