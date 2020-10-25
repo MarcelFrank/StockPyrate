@@ -43,4 +43,4 @@ custom_folder                      = "xlsx_concatenated"
 
 ## Final step: Just open and/or run stockpyrate.py
 
-E. g. directly from prompt (CMD in Windows) or hitting the play button in e. g. Visual Studio Code. XLS folder and file names will be generated automatically.
+Run stockparser.py e. g. directly from prompt/cmd or hitting the play button in e. g. Visual Studio Code. XLS folder and file names will be generated automatically.
