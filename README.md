@@ -31,7 +31,6 @@ Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "
 - Nice loops in range of your decent purposes
 
 **Financial Data Analysis and Visualization:**
-- XLS export
 - Current stock quote
 - Current dividend
 - Current dividend yield
@@ -51,6 +50,7 @@ Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "
 - ... up to 15 years
 - Number of days a stock needs to recover its price before ex date after dividend payment.
 - Key facts based on statistics section at Yahoo Finance
+- Excel/XSLX file export
 
 ## Tasks
 - Refactoring.
