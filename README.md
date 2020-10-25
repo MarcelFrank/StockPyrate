@@ -12,7 +12,7 @@ StockPyrate is a python script to gather stock information about quotes, dividen
 Python 3.7.6 (maybe Python 3.5+ does the job). But you need **Requests** (for crawling), **BeautifulSoup** (for parsing) and **Pandas** (for exporting) to run StockPyrate. Other modules come with the standard Python package such as datetime, random or os, just to mention. Cf. requirements.txt for version information.
 
 ## Demo and Setup
-Take a look into the folder /demo with animated GIF and example XLSX file. The setup is actually copy and paste of cookie settings - then you are ready to go (cf. folder /setup for a how to).
+Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "Intel" (start animated GIF) - the exported XLSX file I placed there too. The setup is actually copy and paste of cookie settings - then you are ready to go (cf. folder /setup for a how to).
 
 ## Feature list
 
