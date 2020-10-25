@@ -26,16 +26,19 @@ Other modules come with the standard Python package such as datetime, random or 
 
 **crawler.py:**
 ```
+# Define your cookie values by replacing the empty strings. Done!
+
 def create_cookie():
     cookie = {
-        'EuConsent': '',                       # Define your cookie values by replacing the empty strings. Done!
-        'UIDR': '',
-[...]
+        'EuConsent': '',                       
+        'UIDR': '', [...]
 ```
 
 **stockpyrate.py:**
 ```
-custom_filter["stocks_whitelist"] = ["intel"]  # Define your stock names to parse as list of strings. Done!
+# Define your stock names to parse as list of strings. Done!
+
+custom_filter["stocks_whitelist"] = ["intel"]  
 ```
 
 ## Demo and Setup
