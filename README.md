@@ -95,7 +95,7 @@ Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "
 - Optional output of one single xlsx file containing key facts of all stocks.
 
 ## Tasks
-- Refactoring.
+- Refactoring (especially parser).
 - Translation.
 - Write documentation.
 - Change from german subsite to US site.
