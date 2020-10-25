@@ -85,14 +85,14 @@ Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "
 - Includes all financial data cf. above
 - One XLSX file for each stock
 - Exported sheets contain:
-<br>&nbsp;- Key data
-<br>&nbsp;- Daily Stock Prices
-<br>&nbsp;- Weekly Stock Prices
-<br>&nbsp;- Quarterly Stock Prices
-<br>&nbsp;- Dividends History
-<br>&nbsp;- Transaction Volume 12 Months
-<br>&nbsp;- Transaction Volume History
-<br>&nbsp;- Market Capitalization (Free Float)
+<br>&nbsp;1. Key data
+<br>&nbsp;2. Daily Stock Prices
+<br>&nbsp;3. Weekly Stock Prices
+<br>&nbsp;4. Quarterly Stock Prices
+<br>&nbsp;5. Dividends History
+<br>&nbsp;6. Transaction Volume 12 Months
+<br>&nbsp;7. Transaction Volume History
+<br>&nbsp;8. Market Capitalization
 - Optional output of one single xlsx file containing key facts of all stocks.
 
 ## Tasks
