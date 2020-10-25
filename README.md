@@ -98,7 +98,8 @@ Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "
 ## Tasks
 - Refactoring.
 - Translation.
-- Change from german subsite to crawling US site.
+- Write documentation.
+- Change from german subsite to US site.
 - More stocks/indices.
 - Integrate financial data such as income statements (SEC fillings).
 - Make it more versatile (untie the Yahoo-biased parsing, other sources).
