@@ -1,6 +1,6 @@
 ## Step 1 of 2
 
-To get StockPyrate running on the german subdomain of Yahoo Finance it is necessary to to edit the function "create_cookie()" in file "crawler.py" that is located in folder "functions". Just fill the empty string values you find in the dictionary "cookie". Necessary keys are listed here:
+To get StockPyrate running on the german subdomain of Yahoo Finance it is necessary to edit the content of the function "create_cookie()" located in file "crawler.py" (cf. folder "functions"). Just fill the empty string values you find in the dictionary "cookie". Necessary keys are listed here:
 
 ``` 
 def create_cookie():
