@@ -36,7 +36,7 @@ def create_cookie():
 
 **stockpyrate.py:**
 ```
-# Define your stock names to parse as list of strings. Done!
+# Define your stock names to parse as a list of strings. Done!
 
 custom_filter["stocks_whitelist"] = ["intel"]  
 ```
