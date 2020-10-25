@@ -62,10 +62,11 @@ Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "
 - Nice loops in range of your decent purposes
 
 **Financial Data Analysis and Visualization**
-- Current stock quote
+- Current stock price
+- Historical stock prices
 - Current dividend
 - Current dividend yield
-- Ex date
+- Current ex date
 - Daily stock quotes with line chart
 - Avg. weekly stock quotes with line chart
 - Avg. quarterly stock quotes with line chart
@@ -75,11 +76,8 @@ Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "
 - Free float market capitalization history
 - Percentage of delta of daily/weekly/quarterly changes
 - Visualization of Ups and Downs with arrow symbols
-- High, mean, low stock quote, date and percent delta for 1 week
-- High, mean, low stock quote, date and percent delta for 2 weeks
-- High, mean, low stock quote, date and percent delta for 1 month...
-- ... up to 15 years
-- Number of days a stock needs to recover its before-ex-date-price after dividend payment.
+- High, mean, low stock quote, date and percent delta for 1 week, ... up to 15 years
+- Number of days a stock needs to recover its before-ex-date-price after dividend payment
 - Key facts based on statistics section at Yahoo Finance
 
 **Excel/XSLX file export**
