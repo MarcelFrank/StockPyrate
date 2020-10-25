@@ -18,7 +18,7 @@ Python 3.7.6 (maybe Python 3.5+ does the job). But you need **Requests** (for cr
 
 ## Feature list
 
-Crawling and Parsing:
+**Crawling and Parsing:**
 - Whitelist filter for stock symbols
 - Blacklist filter for stock symbols
 - Whitelist filter for stock indices
@@ -32,7 +32,7 @@ Crawling and Parsing:
 - Once started, crawl, parse, analyze and export in one shot
 - Nice loops in range of your decent purposes
 
-Financial Data Analysis and Visualization:
+**Financial Data Analysis and Visualization:**
 - XLS export
 - Current stock quote
 - Current dividend
@@ -56,4 +56,4 @@ Financial Data Analysis and Visualization:
 
 ## License
 
-This project is licensed under the terms of the GNU license.
+This project is licensed under the terms of the GPL-3.0.
