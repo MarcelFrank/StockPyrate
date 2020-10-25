@@ -11,7 +11,7 @@ StockPyrate is a python script to gather stock information about quotes, dividen
 - Python script 100% english, XLS content e. g. sheet/column captions (currently) 100% german.
 
 ## Requirements
-Python 3.7.6 (maybe Python 3.5+ does the job). But to run StockPyrate you need:
+Python 3.7.6 (maybe Python 3.5+ does the job). To run StockPyrate you need:
 
 - **Requests** (for crawling)
 - **BeautifulSoup** (for parsing)
