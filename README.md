@@ -7,8 +7,8 @@ A Yahoo Finance stock crawler for financial data analysis and visualization with
 StockPyrate is a python script to gather stock information about quotes, dividends and corporate statistics on Yahoo Finance. As a user you are allowed to enter a list of stocks or indices to be crawled, parsed, analyzed and exported. The script returns xls files for each stock and/or index component with data metrics and visualization e. g. current dividend yield or delta percentage for highs and lows of preset time periods. It further provides a function to concatenate exported files into just a single one to get an overview of all stocks at one place.
 
 ## Important (cookie required)
-- Methodically the script relies on a slow, old-fashioned approach of web scraping instead of rapid API calls. The current implementation sends requests to the german subdomain of Yahoo Finance which requires your consent to its data policy, technically done by a cookie. It thus forces you to visit Yahoo Finance on your own with a common browser beforehand to initially set consent values that you easily need to enter and save before starting the script ([cf. setup.md](setup/setup.md)).
-- XLS content e. g. sheet/column captions (currently) 100% german.
+- The script relies on the slow, old-fashioned approach of web scraping instead of rapid API calls. The current implementation sends requests to the german subdomain of Yahoo Finance which requires your consent to its data policy, technically done by a cookie. It thus forces you to visit Yahoo Finance on your own with a common browser beforehand to initially set consent values that you easily need to enter and save before starting the script ([cf. setup.md](setup/setup.md)).
+- Most of the of the captions and labels in XLS content are (currently) in german.
 
 ## Requirements
 Python 3.7.6 (maybe Python 3.5+ does the job). To run StockPyrate you need:
