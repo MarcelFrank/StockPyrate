@@ -8,7 +8,7 @@ StockPyrate is a python script to gather stock information about quotes, dividen
 - Methodically the script relies on a slow, old-fashioned approach of web scraping instead of rapid API calls. The current implementation sends requests to the german subdomain of Yahoo Finance which requires your consent to its data policy, technically done by a cookie. **It thus forces you to visit Yahoo Finance on your own with a common browser beforehand to initially set consent values** that you easily need to enter and save before starting the script (cf. setup.txt for more information on how to edit the functions/crawler.py).
 - Python script 100% english, XLS content e. g. sheet/column captions (currently) 100% german.
 
-## Requirements:
+## Requirements
 Python 3.7.6 (maybe Python 3.5+ does the job). But you need **Requests** (for crawling), **BeautifulSoup** (for parsing) and **Pandas** (for exporting) to run StockPyrate. Other modules come with the standard Python package such as datetime, random or os, just to mention. Cf. requirements.txt for version information.
 
 ## Demo and Setup
@@ -51,6 +51,20 @@ Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "
 - ... up to 15 years
 - Number of days a stock needs to recover its price before ex date after dividend payment.
 - Key facts based on statistics section at Yahoo Finance
+
+## Tasks
+- Refactoring.
+- Translation.
+- Change from german subsite to crawling US site.
+- More stocks/indices.
+- Integrate financial data such as income statements (SEC fillings).
+- Make it more versatile (untie the Yahoo-biased parsing, other sources).
+- Rebuild or additional feature: API calls.
+- Build web frontend.
+
+## Contribution
+- Find and report bugs.
+- Give ideas on data analysis.
 
 ## License
 
