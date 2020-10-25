@@ -25,12 +25,12 @@ Sorry for this inconvinience.
 
 ## Step 2 of 2 - edit stockpyrate.py (for parsing your wishlist of stocks)
 
-To define the stocks to be parsed please enter a list of stock names (as strings) in the first line of the user's control panel. That's it. Since it does not ask for stock symbols, rather stock names, just have a look into the dictionaries in functions/stock_userlist.py where all accessible stock names are prefilled. Of course, you may enhance the stock_userlist.py by more stocks and give it a try.
+To define the stocks to be parsed please enter a list of stock names (as strings) in the first line of the user's control panel. That's it. Since it does not ask for stock symbols, rather stock names, just have a look into the dictionaries in functions/stock_userlist.py that is later on called and where all accessible stock names are pre-entered. Of course, you may enhance the dictionaries in the stock_userlist.py with more popular stocks and give it a try, likely you succeed.
 
 ```
 #________________________________________________________U S E R ' S - C O N T R O L - P A N E L___
 
-custom_filter["stocks_whitelist"]  = ["intel"]
+custom_filter["stocks_whitelist"]  = ["intel"] # <----------------------------------- EDIT THIS
 custom_filter["stocks_blacklist"]  = []
 custom_filter["indices_whitelist"] = []
 custom_filter["indices_blacklist"] = []
