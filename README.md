@@ -112,4 +112,4 @@ Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "
 
 ## License
 
-This project is licensed under the terms of the GPL-3.0.
+This project is licensed under the terms of the [GPL-3.0](https://github.com/MarcelFrank/StockPyrate/blob/main/LICENSE).
