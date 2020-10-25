@@ -70,6 +70,8 @@ Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "
 
 This project is licensed under the terms of the GPL-3.0.
 
-## Example screenshot running stockpyrate.py
+## Example screenshot from running stockpyrate.py
 
 ![StockPyrate.py](https://github.com/MarcelFrank/StockPyrate/blob/main/demo/status-message-sample.png)
+
+## Example screenshots from Excel/XLSX export
