@@ -74,4 +74,11 @@ This project is licensed under the terms of the GPL-3.0.
 
 ![StockPyrate.py](https://github.com/MarcelFrank/StockPyrate/blob/main/demo/status-message-sample.png)
 
-## Example screenshots from Excel/XLSX export
+## Example screenshot from Excel/XLSX export - Sheet "Key Facts"
+
+![StockPyrate.py](https://github.com/MarcelFrank/StockPyrate/blob/main/demo/screenshot-from-example-xlsx-01.png)
+
+## Example screenshot from Excel/XLSX export - Sheet "Transaction Volume 12 Months"
+
+![StockPyrate.py](https://github.com/MarcelFrank/StockPyrate/blob/main/demo/screenshot-from-example-xlsx-02.png)
+
