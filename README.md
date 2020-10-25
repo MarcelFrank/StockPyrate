@@ -7,8 +7,8 @@ A Yahoo Finance stock crawler for financial data analysis and visualization with
 StockPyrate is a python script to gather stock information about quotes, dividends and corporate statistics on Yahoo Finance. As a user you are allowed to enter a list of stocks or indices to be crawled, parsed, analyzed and exported. The script returns xls files for each stock and/or index component with data metrics and visualization e. g. current dividend yield or delta percentage for highs and lows of preset time periods. It further provides a function to concatenate exported files into just a single one to get an overview of all stocks at one place.
 
 ## Important (cookie required)
-- Methodically the script relies on a slow, old-fashioned approach of web scraping instead of rapid API calls. The current implementation sends requests to the german subdomain of Yahoo Finance which requires your consent to its data policy, technically done by a cookie. It thus forces you to visit Yahoo Finance on your own with a common browser beforehand to initially set consent values that you easily need to enter and save before starting the script ([cf. setup.md](setup/setup.md)  for more information on how to edit the functions/crawler.py).
-- Python script 100% english, XLS content e. g. sheet/column captions (currently) 100% german.
+- Methodically the script relies on a slow, old-fashioned approach of web scraping instead of rapid API calls. The current implementation sends requests to the german subdomain of Yahoo Finance which requires your consent to its data policy, technically done by a cookie. It thus forces you to visit Yahoo Finance on your own with a common browser beforehand to initially set consent values that you easily need to enter and save before starting the script ([cf. setup.md](setup/setup.md)).
+- XLS content e. g. sheet/column captions (currently) 100% german.
 
 ## Requirements
 Python 3.7.6 (maybe Python 3.5+ does the job). To run StockPyrate you need:
@@ -42,7 +42,7 @@ custom_filter["stocks_whitelist"] = ["intel"]
 ```
 
 ## Demo and Setup
-Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "Intel" (or start animated GIF [here](demo/demo-run-just-executing-from-commandline.gif)). Find there as well an example of an exported XLSX file. Apart from module requirements the initial setup is to set your individual cookie and you are ready to go (How To: [cf. setup.md](setup/setup.md)).
+Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "Intel" (or start animated GIF [here](demo/demo-run-just-executing-from-commandline.gif)). Find there as well an example of an exported XLSX file. Apart from module requirements the initial setup is to set your individual cookie and you are ready to go ([cf. setup.md](setup/setup.md)).
 
 ## Feature list
 
