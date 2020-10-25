@@ -17,7 +17,7 @@ Python 3.7.6 (maybe Python 3.5+ does the job). To run StockPyrate you need:
 - **BeautifulSoup** (for parsing)
 - **Pandas** (for exporting)
 
-Other modules come with the standard Python package such as datetime, random or os ([cf. requirements.txt](/requirements.txt) for version information.
+Other modules come with the standard Python package such as datetime, random or os ([cf. requirements.txt](/requirements.txt)).
 
 ## How to run
 1. Set up your cookie in crawler.py (/functions)
