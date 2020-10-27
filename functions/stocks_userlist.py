@@ -217,7 +217,7 @@ def get():
         ("M8G.DE",  "xanthusmediaandgamesinvest")
         ]
     stocks_userlist["dow"] = [
-   	    ("MMM",  "3m"),
+        ("MMM",  "3m"),
         ("AXP",  "americanexpress"),
         ("AMGN", "amgen"),
         ("AAPL", "apple"),
@@ -417,6 +417,43 @@ def get():
         ("IMB.L", "imperialbrands"),
         ("RB.L", "reckittbenckiser"),
         ("RDSB.L", "royaldutchshell")
+        ]
+    stocks_userlist["ibex"] = [
+        ("ANA.MC", "acciona"),
+        ("ACX.MC", "acerinox"),
+        ("ACS.MC", "acs"),
+        ("AENA.MC", "aena"),
+        ("AMS.MC", "amadeus"),
+        ("ALM.MC", "almirall"),
+        ("MTS.MC", "arcelormittal"),
+        ("SAB.MC", "bancosabadell"),
+        ("SAN.MC", "bancosantander"),
+        ("BKIA.MC", "bankia"),
+        ("BKT.MC", "bankinter"),
+        ("BBVA.MC", "bbva"),
+        ("CABK.MC", "caixabank"),
+        ("CIE.MC", "cieautomotive "),
+        ("CLNX.MC", "cellnextelecom"),
+        ("ENG.MC", "enagas"),
+        ("ELE.MC", "endesa"),
+        ("FER.MC", "ferrovial"),
+        ("GRF.MC", "grifols"),
+        ("IBE.MC", "iberdrola"),
+        ("ITX.MC", "inditex"),
+        ("IDR.MC", "indrasistemas"),
+        ("COL.MC", "inmobiliariacolonial"),
+        ("IAG.MC", "internationalairlines"),
+        ("MAP.MC", "mapfre"),
+        ("MEL.MC", "meliahotels"),
+        ("MRL.MC", "merlinproperties"),
+        ("NTGY.MC", "naturgyenergy"),
+        ("PHM.MC", "pharmamar"),
+        ("REE.MC", "redelectrica"),
+        ("REP.MC", "repsol"),
+        ("SGRE.MC", "siemensgamesa"),
+        ("SLR.MC", "solariaenergia"),
+        ("TEF.MC", "telefonicaes"),
+        ("VIS.MC", "viscofan")
         ]
     # It is highly recommended to not try to crawl the following stocks/indices.
     # Although it will not stall the script, it does not generate XLSX files either
