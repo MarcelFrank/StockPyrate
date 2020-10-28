@@ -169,6 +169,8 @@ class StockObject():
                         dividend_last_amount = self.dividend_history[0][1] + self.dividend_history[1][1]
                     if self.name == "danone" or self.name == "tangerfactoryoutlet" or self.name == "macys" or self.name == "macerich" or self.name == "simonpropertygroup" or self.name == "meredith" or self.name == "ford" or self.name == "carnival":
                         dividend_last_amount = self.dividend_history[0][1]
+                if self.index in ["ibex"]:
+                    dividend_last_amount = self.dividend_history[0][1]*2 # IBEX stocks will be dealt with as if paying dividends half-yearly (does not fit to all 35 components; better solution requires additional stock information about yearly no. of ex dates [e. g. 1, 2, 4, 12] in stocks_userlist.py)
                 else:
                     dividend_last_amount = self.dividend_history[0][1]
                 self.dividend_rate = float(dividend_last_amount/self.prices_daily[0][1])
