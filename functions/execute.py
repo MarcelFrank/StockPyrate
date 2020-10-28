@@ -23,9 +23,7 @@ def start_program(
             custom_filter["indices_whitelist"].append(key)
 
     for index in custom_filter["indices_whitelist"]:
-        if index not in custom_filter["indices_blacklist"] and (
-        index in custom_filter["indices_whitelist"] or
-        custom_filter["indices_whitelist"] == []):
+        if index not in custom_filter["indices_blacklist"]:
             stocks_of_selected_index = stocks_userlist[index]
             for i in list(range(0, len(stocks_of_selected_index))):
                 stock_current["name"] = stocks_of_selected_index[i][1]
