@@ -13,9 +13,12 @@ def get_xlsx_files():
 def create_dataframe(xlsx_files):
     dataframes = []
     for file in xlsx_files:
-        status_messages.concatenation(2, file)
-        dataframes.append(pd.read_excel(file, sheet_name=0, index_col=0))
-    dataframe = pd.concat(dataframes, axis=1).T.copy()
+        status_messages.concatenation(2, file)     
+        df_crop_1 = pd.read_excel(file, sheet_name=0, index_col=0).iloc[0:120]
+        df_crop_2 = pd.read_excel(file, sheet_name=0, index_col=0).iloc[125:]
+        df_complete = pd.concat([df_crop_1, df_crop_2], axis=0)        
+        dataframes.append(df_complete)
+    dataframe = pd.concat(dataframes, axis=1).T
     return dataframe
 
 def initiate_export(dataframe, custom_filename, custom_folder):
