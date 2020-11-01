@@ -170,7 +170,7 @@ class StockObject():
                     dividend_last_amount = self.dividend_history[0][1]*2 # IBEX/FTSE stocks will be dealt with as if paying dividends half-yearly (does not fit to all 35 components; better solution requires additional stock information about yearly no. of ex dates [e. g. 1, 2, 4, 12] in stocks_userlist.py)
                     if self.name == "imperialbrands":
                         dividend_last_amount = self.dividend_history[0][1] + self.dividend_history[1][1] + self.dividend_history[2][1] + self.dividend_history[3][1]
-                    elif self.name in ["bp", "royaldutchshella", "royaldutchshellb"]:
+                    elif self.name in ["bp", "royaldutchshella", "royaldutchshellb", "britishamericantobacco"]:
                         dividend_last_amount = self.dividend_history[0][1]*4
                 elif self.index in ["dax", "mdax", "sdax", "scale", "cac"]:
                     dividend_last_amount = self.dividend_history[0][1]
