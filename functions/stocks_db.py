@@ -155,23 +155,24 @@ class StockObject():
 
     def compute_dividend_rate(self):
         status_messages.status(243)
-        
         year_of_last_dividend_payment = self.dividend_history[0][0].year
         if datetime.now().year == year_of_last_dividend_payment:
             if self.dividend_history[0][1] > 0:
-                if self.index in ["dow", "nasdaq", "nyse", "lse"]:
+                if self.index in ["dow", "nasdaq", "nyse"]:
                     dividend_last_amount = self.dividend_history[0][1]*4
                     if self.name == "realtyincome":
                         dividend_last_amount = dividend_last_amount*3
+                    elif self.name in ["euronav", "frontline"]:
+                        dividend_last_amount = self.dividend_history[0][1] + self.dividend_history[1][1]
+                    elif self.name in ["tangerfactoryoutlet", "macys", "macerich", "simonpropertygroup", "meredith", "ford", "carnival"]:
+                        dividend_last_amount = self.dividend_history[0][1]
+                elif self.index in ["ibex", "ftse"]:
+                    dividend_last_amount = self.dividend_history[0][1]*2 # IBEX/FTSE stocks will be dealt with as if paying dividends half-yearly (does not fit to all 35 components; better solution requires additional stock information about yearly no. of ex dates [e. g. 1, 2, 4, 12] in stocks_userlist.py)
                     if self.name == "imperialbrands":
                         dividend_last_amount = self.dividend_history[0][1] + self.dividend_history[1][1] + self.dividend_history[2][1] + self.dividend_history[3][1]
-                    if self.name == "euronav" or self.name == "frontline":
-                        dividend_last_amount = self.dividend_history[0][1] + self.dividend_history[1][1]
-                    if self.name == "danone" or self.name == "tangerfactoryoutlet" or self.name == "macys" or self.name == "macerich" or self.name == "simonpropertygroup" or self.name == "meredith" or self.name == "ford" or self.name == "carnival":
-                        dividend_last_amount = self.dividend_history[0][1]
-                if self.index in ["ibex"]:
-                    dividend_last_amount = self.dividend_history[0][1]*2 # IBEX stocks will be dealt with as if paying dividends half-yearly (does not fit to all 35 components; better solution requires additional stock information about yearly no. of ex dates [e. g. 1, 2, 4, 12] in stocks_userlist.py)
-                else:
+                    elif self.name in ["bp", "royaldutchshella", "royaldutchshellb"]:
+                        dividend_last_amount = self.dividend_history[0][1]*4
+                elif self.index in ["dax", "mdax", "sdax", "scale", "cac"]:
                     dividend_last_amount = self.dividend_history[0][1]
                 self.dividend_rate = float(dividend_last_amount/self.prices_daily[0][1])
                 self.dividend_rate_hypothetic = float(dividend_last_amount/self.prices_daily[0][1])
@@ -402,13 +403,13 @@ class StockObject():
             format_thousands = workbook.add_format({'num_format': '#,##0', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
             format_percentage = workbook.add_format({'num_format': '[Color 23]#,##0.00%;[RED]-#,##0.00%', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
             format_font = workbook.add_format({'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
-            if self.index in ["dax", "mdax", "sdax", "xetra", "germany", "scale"]:
+            if self.index in ["dax", "mdax", "sdax", "xetra", "germany", "scale", "ibex", "cac"]:
                 format_currency_int = workbook.add_format({'num_format': '#,##0 [$€-407]', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
                 format_currency_float = workbook.add_format({'num_format': '#,##0.00 [$€-407]', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
             elif self.index in ["dow", "nasdaq", "nyse"]:
                 format_currency_int = workbook.add_format({'num_format': '#,##0 [$$-409]', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
                 format_currency_float = workbook.add_format({'num_format': '#,##0.00 [$$-409]', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
-            elif self.index in ["lse"]:
+            elif self.index in ["ftse"]:
                 format_currency_int = workbook.add_format({'num_format': '#,##0 [$£-809]', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
                 format_currency_float = workbook.add_format({'num_format': '#,##0.00 [$£-809]', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
            
