@@ -4,7 +4,7 @@ A Yahoo Finance stock crawler for financial data analysis and visualization with
 ![StockPyrate.py](https://github.com/MarcelFrank/StockPyrate/blob/main/demo/screenshot-from-example-xlsx-02.png)
 
 ## About
-StockPyrate is a python script to gather stock information about prices, dividends, volumes, market caps and corporate statistics at Yahoo Finance with a focus on components of DOW JONES, NASDAQ 100, DAX, MDAX, SDAX and IBEX. As a user you enter a list of stocks or indices to be crawled, parsed, analyzed and exported. The script returns xls files for each stock and/or index components with metrics and visualization for e. g. current dividend yields or delta percentages of highs and lows in predefined time periods. It also provides a function to concatenate all parsed stocks into a single xlsx file to get a bird's-eye-view on all stocks at one place. Purpose is to enhance data, automate the time-consuming work of screening stock information and hereby make investment decisions easier and faster for individual investors.
+StockPyrate is a python script to gather stock information about prices, dividends, volumes, market caps and corporate statistics at Yahoo Finance with a focus on components of DOW JONES, NASDAQ 100, DAX 30, MDAX, SDAX, IBEX 35, CAC 40 and FTSE 100. As a user you enter a list of stocks or indices to be crawled, parsed, analyzed and exported. The script returns xls files for each stock and/or index components with metrics and visualization for e. g. current dividend yields or delta percentages of highs and lows in predefined time periods. It also provides a function to concatenate all parsed stocks into a single xlsx file to get a bird's-eye-view on all stocks at one place. Purpose is to enhance data, automate the time-consuming work of screening stock information and hereby make investment decisions easier and faster for individual investors.
 
 ## Important (cookie required)
 - The script relies on the slow, old-fashioned approach of web scraping instead of rapid API calls.
@@ -67,9 +67,9 @@ Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "
 - Current dividend
 - Current dividend yield
 - Current ex date
-- Daily stock quotes with line chart
-- Avg. weekly stock quotes with line chart
-- Avg. quarterly stock quotes with line chart
+- Daily stock prices with line chart
+- Avg. weekly stock prices with line chart
+- Avg. quarterly stock prices with line chart
 - Dividend history with column chart
 - Transaction volumes in number of trades shares
 - Transaction amounts, cf. above multiplied with closing prices
