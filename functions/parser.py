@@ -1,5 +1,4 @@
 from functions import converter, status_messages
-from bs4 import BeautifulSoup
 from datetime import datetime
 import re
 
@@ -67,10 +66,26 @@ def stock_dividends(corpus):
 def stock_statistics(corpus):
     status_messages.status(113)
     statistics = {}
-
+    
     for content in corpus.select("tr"):
         key = content.find_next("span").text
         value = content.find_next("span").find_next("td").text
+        
+        # What is this pattern_sh..: Pragmatic correction of table header label strings where short ratio information since these differ for e. g. US or European stocks.
+        # Solution: Detect and unify by deleting a few characters from right to left.
+        # Why: Table headers need to be identical for each stock to be able to merge dataframes later on with pandas.
+        pattern_shares_short_matched = re.match("^(?:Aktien (\(Short+)(\)|\,)+).*", key)
+        pattern_short_ratio = re.match("^(?:Short (% [A-Za-z\/ ]*|Ratio )).*", key)
+        if bool(pattern_shares_short_matched):
+            if "," in key:
+                key = key.replace(",",")").split(")")[0]+str(") - Vormonat")
+            else:
+                key = key.split(")")[0]+str(") - letzter Stand")
+        elif bool(pattern_short_ratio):
+            key = key.split(" (")[0]
+            if key.endswith(" "):
+                key = key[:-1]
+                        
         statistics[key] = value
         
     return statistics

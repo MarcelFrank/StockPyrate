@@ -6,6 +6,7 @@ def status(key):
     code[201] = "> Creating stock object:\n"
     code[211] = "- Writing ID...\n"
     code[212] = "- Writing stock symbol...\n"
+    code[223] = "- Writing sector information...\n"
     code[213] = "- Writing index information...\n"
     code[214] = "- Writing daily stock prices...\n"
     code[215] = "- Writing weekly stock prices...\n"
@@ -37,44 +38,15 @@ def status(key):
     code[281] = "- Inserting subfolder 'xlsx' (preset in stocks_db.py)...\n"
     code[282] = "- Inserting custom folder as destination for concatenated xlsx files...\n"
     code[291] = "- Writing key facts to be inserted as first sheet in single xlsx files...\n"
+    code[301] = "\n> Crawling and parsing of html content of all urls above took (in seconds):\n- "
+    code[302] = "> Computing financial data and writing xlsx file took (in seconds):\n- "
     [print(i, end = "") for i in code[key]]
 
-def xlsx(xlsx_filename):
-    print("> Writing XLSX file (check subfolder 'xlsx'):\n-", xlsx_filename)
-
-def report(stocks_parsed):
-    print("\n________________________________________________________________________________")
-    print("\n> Total number of successfully parsed stocks:", stocks_parsed["successfully"], "\n-", stocks_parsed["successfully_names"], "\n")
-    print("> Total number of not so successfuly parsed stocks:", stocks_parsed["successfully_false"], "\n-", stocks_parsed["successfully_false_names"], "\n")
-
-def success(stocks_parsed):
-    print("> Successfully parsed stocks up to now:\n-", stocks_parsed["successfully_names"], end = "")
-
-def skip(index):
-    print("\n________________________________________________________________________________\n\n>>> Index", index.upper(), "is blacklisted and will be skipped...")
-
-def code_args_none(code):
-    code_args_none = {}
-    code_args_none[1] = "\n> Crawling and parsing of html content of all urls above took (in seconds):\n- "
-    code_args_none[2] = "> Writing stock object, computing financial data and writing xlsx file took (in seconds):\n- "
-    [print(i, end = "") for i in code_args_none[code]]
-
-def code_args_one(code, argument):
-    code_args_one = {}
-    code_args_one[1] = ""
-    code_args_one[2] = "\n________________________________________________________________________________\n\n>>> ", str(argument["name"]).upper(), " is about to be analyzed...\n"
-    code_args_one[3] = "\n________________________________________________________________________________\n\n>>> ", str(argument["name"]).upper(), " is blacklisted and will be skipped..."
-    [print(i, end = "") for i in code_args_one[code]]
-
-def concatenation(code, argument=""):
-    code_args_one = {}
-    code_args_one[1] = "________________________________________________________________________________\n\n>>> Starting concatenation of xlsx files in subfolder ", argument.upper(), "\n\n"
-    code_args_one[2] = "- Reading: ", argument[int(str(argument).rfind("\\"))+1:], "\n"
-    code_args_one[3] = "- Writing: ", argument[int(str(argument).rfind("\\"))+1:].replace("..", ""), "\n- HAPPY END\n\n"
-    [print(i, end = "") for i in code_args_one[code]]
-
+def crawler_task(stock_current):
+    print("\n>>>", str(stock_current["name"]).upper(), "is about to be analyzed...")
+    
 def crawler_get(argument_one, argument_two):
-    return print("\n> Crawling starts in", argument_one, "seconds:\n- URL:", argument_two)
+    print("\n> Crawling starts in", argument_one, "seconds:\n- URL:", argument_two)
 
 def crawler_error(code, stock_current, stocks_parsed):
     stocks_parsed["successfully_false"] += 1
@@ -89,6 +61,41 @@ def crawler_error(code, stock_current, stocks_parsed):
     [print(i, end = "") for i in code_args_one[code]]
     [print(i, end = "") for i in code_args_one[400]]
 
-def sneak_preview(df):
-    print("\nSneak Preview:")
-    [print(key[1].head(), "\n") for key in df.items() if "row_count" not in str(key[0]) and ("overview" in str(key[0]) or "daily" in str(key[0]))]
+def crawler_progression(stocks_filtered, stocks_parsed, average_crawling_delay):
+    #if stocks_parsed["successfully"] + stocks_parsed["successfully_false"] != 0:
+    if stocks_parsed["successfully"] != 0:
+        print("> Successfully parsed stocks up to now:\n-", stocks_parsed["successfully_names"])
+    if stocks_parsed["successfully_false"] != 0:
+        print("> Not so successfully parsed stocks up to now:\n-", stocks_parsed["successfully_false_names"])
+    print("> Number of stocks in total:\t{total}".format(total=len(stocks_filtered)))
+    print("> Number of stocks in queue:\t{queue}".format(queue=len(stocks_filtered)-(stocks_parsed["successfully"] + stocks_parsed["successfully_false"])))
+    print("> Number of nicely parsed:\t{parsed}".format(parsed=stocks_parsed["successfully"]))
+    print("> Number of poorly parsed:\t{parsed}".format(parsed=stocks_parsed["successfully_false"]))
+    print("> Crawling Progression:\t\t{progress:.2%}".format(progress=(stocks_parsed["successfully"] + stocks_parsed["successfully_false"])/len(stocks_filtered)))
+    print("> Time to go (ETA):\t\t~{eta:.0f} minutes\n".format(eta=((len(stocks_filtered)-(stocks_parsed["successfully"] + stocks_parsed["successfully_false"]))*average_crawling_delay*7)/60)) # guessing
+
+def filter_output(stocks_filtered, average_crawling_delay):
+    print("\n  Welcome to StockPyrate and here we go...\n")
+    print("> Time to go (ETA): {eta:.0f} minutes".format(eta=(len(stocks_filtered)*average_crawling_delay*7)/60)) # guessing
+    print("> Number of stocks:", len(stocks_filtered))
+    [print("- {name}\t({sector})\t| {index}".format(name=name.upper(), sector=sector.split("> ")[1], index=index.upper()).expandtabs(43)) for name, symbol, sector, index in stocks_filtered]
+
+def sneak_preview(stock_objects, override_analysis_only_df_crawling):
+    if not override_analysis_only_df_crawling:
+        print("\n> Sneak Preview:")
+        [print(key[1].tail(), "\n") for key in stock_objects[-1].dataframes_for_xlsx_export.items() if "row_count" not in str(key[0]) and ("overview" in str(key[0]) or "daily" in str(key[0]))]
+
+def show_time_series_dataframes(time_series_dataframes_for_all_stocks, override_analysis_only_df_crawling):
+    if override_analysis_only_df_crawling:
+        [print("Stock: "+str(stock_key).upper()+"\n",dataframe.tail(),"\n") for stock_key, dataframe in time_series_dataframes_for_all_stocks.items()]
+
+def concatenation(code, argument=""):
+    code_args_one = {}
+    code_args_one[1] = "\n>>> Starting concatenation of xlsx files in subfolder ", argument.upper(), "\n\n"
+    code_args_one[2] = "- Reading: ", argument[int(str(argument).rfind("\\"))+1:], "\n"
+    code_args_one[3] = "- Writing: ", argument[int(str(argument).rfind("\\"))+1:].replace("..", ""), "\n- HAPPY END\n\n"
+    code_args_one[4] = "- Ups, nothing here! Please provide XLSX files to be concatenated.\n\n"
+    [print(i, end = "") for i in code_args_one[code]]
+
+def xlsx(xlsx_filename):
+    print("> Writing XLSX file (check subfolder 'xlsx'):\n-", xlsx_filename)
