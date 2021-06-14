@@ -1,26 +1,38 @@
-from functions import stocks_userlist, execute
+from functions import execute
+
 custom_filter = {}
 
 #________________________________________________________U S E R ' S - C O N T R O L - P A N E L___
 
-custom_filter["stocks_whitelist"]  = ["intel"] # Enter stock name(s) to be parsed as a list of strings, e. g. ["gilead", "pfizer"] (cf. dict values in stocks_userlist.py for inspiration)
-custom_filter["stocks_blacklist"]  = []        # Vice versa (NOT to be parsed).
-custom_filter["indices_whitelist"] = []        # Enter index/indices to be parsed as a list of strings, e. g. ["dow", "dax"] (cf. dict keys in stocks_userlist.py for inspiration)
-custom_filter["indices_blacklist"] = []        # Vice versa (NOT to be parsed).
-average_crawling_delay             = 30        # Enter crawling delay in seconds as integer
-concatenate_xlsx_after_parsing     = False     # Enter True to read the first sheet of all created xlsx files and compile one xlsx file as an overview data collection for all stocks. 
-custom_filename                    = "birdseyeview.xlsx"
-custom_folder                      = "xlsx_concatenated"
+custom_filter["whitelist_stocks"]  = ["intel"]
+custom_filter["whitelist_indices"] = []
+custom_filter["whitelist_sectors"] = []
+custom_filter["blacklist_stocks"]  = []
+custom_filter["blacklist_indices"] = []
+average_crawling_delay             = 20
 
-#________________________________________________________S T A R T - P R O G R A M_________________
+#________________________________________________________S P E C I A L - C O M M A N D S___________
 
-stocks_userlist = stocks_userlist.get()
+override_filter_crawl_portfolio    = False # edit portfolio in stocks_userlist.py by insert lines from get_all_stocks() via copy&paste
+override_analysis_only_df_crawling = False # crawling just returns a dataframe with prices for each stock skipping analysis and xlsx generation
+override_crawling_print_stocklist  = False # display selected stocks and ETA according to custom filter settings and skip crawling
+override_crawling_use_testdata     = False # pass stock_testdata.py to crawler for instant testing without internet connection
+override_crawling_merge_xlsx_files = False # insert xlsx files of parsed stocks into default xlsx folder before setting to true
+custom_filename                    = "merged.xlsx"
+custom_folder                      = "xlsx_merged"
+
+#________________________________________________________I N I T I A T E - P R O G R A M___________
+
 args = (
     custom_filter,
     average_crawling_delay,
-    concatenate_xlsx_after_parsing,
     custom_filename,
     custom_folder,
-    stocks_userlist
+    override_filter_crawl_portfolio,
+    override_crawling_print_stocklist,
+    override_crawling_use_testdata,
+    override_crawling_merge_xlsx_files,
+    override_analysis_only_df_crawling
     )
-execute.start_program(*args)
+
+execute.start(*args)
