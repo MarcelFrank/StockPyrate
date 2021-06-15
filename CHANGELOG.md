@@ -2,7 +2,7 @@
 
 This is a version history with comments on recent updates. I am looking forward to rather build a new branch with a lot of changes at once than committing tiny tweaks.
 
-## JUNE 15TH 2021 - New branch called "update-2021-sectors-and-fixes" covering all changes in the last months
+## JUNE 15TH, 2021 - New branch called "update-2021-sectors-and-fixes" covering all changes in the last months
 
 **New features:**
 - SECTORS:<br />Sector of stock is written into xlsx output to add more information and better sorting.
