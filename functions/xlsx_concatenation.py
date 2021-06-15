@@ -1,7 +1,23 @@
-from functions import status_messages
+from functions import runtimer, status_messages
 from datetime import datetime
 import pandas as pd
 import os
+
+def shortcut(custom_filename = "cuvee.xlsx", custom_folder = "cuvee"):
+    stopwatch = runtimer.TimeKeeper()
+    stopwatch.start()
+    status_messages.concatenation(1, custom_folder)
+    initiate_export(create_dataframe(get_xlsx_files()), custom_filename, custom_folder)
+    stopwatch.show()
+
+def initiate_export(dataframe, custom_filename, custom_folder):
+    current_date = datetime.now()
+    xlsx_root = os.path.join(os.path.dirname(__file__), "..")
+    filename = xlsx_root + "/" + custom_folder + "/" + str(current_date.date()) + "_" + custom_filename
+    if custom_folder not in os.listdir(xlsx_root):
+        status_messages.status(282)
+        os.mkdir(xlsx_root + "/" + custom_folder)
+    dataframe_to_xlsx(filename, dataframe)
 
 def get_xlsx_files():
     xlsx_root = os.path.join(os.path.dirname(__file__), "..")
@@ -13,22 +29,14 @@ def get_xlsx_files():
 def create_dataframe(xlsx_files):
     dataframes = []
     for file in xlsx_files:
-        status_messages.concatenation(2, file)     
+        status_messages.concatenation(2, file)
+        # In case of table header label issue (out of sync for different stocks) select the synced ones by roughly cropping with iloc position aka columns.
         df_crop_1 = pd.read_excel(file, sheet_name=0, index_col=0).iloc[0:120]
-        df_crop_2 = pd.read_excel(file, sheet_name=0, index_col=0).iloc[125:]
-        df_complete = pd.concat([df_crop_1, df_crop_2], axis=0)        
+        df_crop_2 = pd.read_excel(file, sheet_name=0, index_col=0).iloc[120:]
+        df_complete = pd.concat([df_crop_1, df_crop_2], axis=0)
         dataframes.append(df_complete)
     dataframe = pd.concat(dataframes, axis=1).T
     return dataframe
-
-def initiate_export(dataframe, custom_filename, custom_folder):
-    current_date = datetime.now()
-    xlsx_root = os.path.join(os.path.dirname(__file__), "..")
-    filename = xlsx_root + "/" + custom_folder + "/" + str(current_date.date()) + "_" + custom_filename
-    if custom_folder not in os.listdir(xlsx_root):
-        status_messages.status(282)
-        os.mkdir(xlsx_root + "/" + custom_folder)
-    dataframe_to_xlsx(filename, dataframe)
 
 def dataframe_to_xlsx(filename, dataframe):
     status_messages.concatenation(3, filename)
@@ -45,59 +53,45 @@ def dataframe_to_xlsx(filename, dataframe):
         dataframe_sheet.set_column('A:A', 20)
         dataframe_sheet.set_column('B:B', 16, format_date)
         dataframe_sheet.set_column('C:C', 9, format_font)
-        dataframe_sheet.set_column('D:E', 15, format_currency_float)
-        dataframe_sheet.set_column('F:F', 20, format_date)
-        dataframe_sheet.set_column('G:H', 20, format_percentage)
-        dataframe_sheet.set_column('I:I', 20, format_date)
-        dataframe_sheet.set_column('J:J', 20, format_thousands)
-        dataframe_sheet.set_column('K:K', 20, format_currency_float)
-        dataframe_sheet.set_column('L:L', 20, format_percentage)
-        dataframe_sheet.set_column('M:M', 20, format_date)
-        dataframe_sheet.set_column('N:Q', 20, format_currency_int)
-        dataframe_sheet.set_column('R:S', 20, format_thousands)
-        
-        dataframe_sheet.set_column('T:V', 20, format_percentage)
-        dataframe_sheet.set_column('W:Y', 20, format_currency_float)
-        dataframe_sheet.set_column('Z:AA', 20, format_date)
-
-        dataframe_sheet.set_column('AB:AD', 20, format_percentage)
-        dataframe_sheet.set_column('AE:AG', 20, format_currency_float)
-        dataframe_sheet.set_column('AH:AI', 20, format_date)
-
-        dataframe_sheet.set_column('AJ:AL', 20, format_percentage)
-        dataframe_sheet.set_column('AM:AO', 20, format_currency_float)
-        dataframe_sheet.set_column('AP:AQ', 20, format_date)
-
-        dataframe_sheet.set_column('AR:AT', 20, format_percentage)
-        dataframe_sheet.set_column('AU:AW', 20, format_currency_float)
-        dataframe_sheet.set_column('AX:AY', 20, format_date)
-
-        dataframe_sheet.set_column('AZ:BB', 20, format_percentage)
-        dataframe_sheet.set_column('BC:BE', 20, format_currency_float)
-        dataframe_sheet.set_column('BF:BG', 20, format_date)
-
-        dataframe_sheet.set_column('BH:BJ', 20, format_percentage)
-        dataframe_sheet.set_column('BK:BM', 20, format_currency_float)
-        dataframe_sheet.set_column('BN:BO', 20, format_date)
-
-        dataframe_sheet.set_column('BP:BR', 20, format_percentage)
-        dataframe_sheet.set_column('BS:BU', 20, format_currency_float)
-        dataframe_sheet.set_column('BV:BW', 20, format_date)
-
-        dataframe_sheet.set_column('BX:BZ', 20, format_percentage)
-        dataframe_sheet.set_column('CA:CC', 20, format_currency_float)
-        dataframe_sheet.set_column('CD:CE', 20, format_date)
-
-        dataframe_sheet.set_column('CF:CH', 20, format_percentage)
-        dataframe_sheet.set_column('CI:CK', 20, format_currency_float)
-        dataframe_sheet.set_column('CL:CM', 20, format_date)
-
-        dataframe_sheet.set_column('CN:CP', 20, format_percentage)
-        dataframe_sheet.set_column('CQ:CS', 20, format_currency_float)
-        dataframe_sheet.set_column('CT:CU', 20, format_date)
-
-        dataframe_sheet.set_column('CV:FB', 20, format_font)
-
-def shortcut(custom_filename = "cuvee.xlsx", custom_folder = "cuvee"):
-    status_messages.concatenation(1, custom_folder)
-    initiate_export(create_dataframe(get_xlsx_files()), custom_filename, custom_folder)
+        dataframe_sheet.set_column('D:D', 25, format_font)
+        dataframe_sheet.set_column('E:F', 15, format_currency_float)
+        dataframe_sheet.set_column('G:G', 20, format_date)
+        dataframe_sheet.set_column('H:I', 20, format_percentage)
+        dataframe_sheet.set_column('J:J', 20, format_date)
+        dataframe_sheet.set_column('K:K', 20, format_thousands)
+        dataframe_sheet.set_column('L:L', 20, format_currency_float)
+        dataframe_sheet.set_column('M:M', 20, format_percentage)
+        dataframe_sheet.set_column('N:N', 20, format_date)
+        dataframe_sheet.set_column('O:R', 20, format_currency_int)
+        dataframe_sheet.set_column('S:T', 20, format_thousands)
+        dataframe_sheet.set_column('U:W', 20, format_percentage)
+        dataframe_sheet.set_column('X:Z', 20, format_currency_float)
+        dataframe_sheet.set_column('AA:AB', 20, format_date)
+        dataframe_sheet.set_column('AC:AE', 20, format_percentage)
+        dataframe_sheet.set_column('AF:AH', 20, format_currency_float)
+        dataframe_sheet.set_column('AI:AJ', 20, format_date)
+        dataframe_sheet.set_column('AK:AM', 20, format_percentage)
+        dataframe_sheet.set_column('AN:AP', 20, format_currency_float)
+        dataframe_sheet.set_column('AQ:AR', 20, format_date)
+        dataframe_sheet.set_column('AS:AU', 20, format_percentage)
+        dataframe_sheet.set_column('AV:AX', 20, format_currency_float)
+        dataframe_sheet.set_column('AY:AZ', 20, format_date)
+        dataframe_sheet.set_column('BA:BC', 20, format_percentage)
+        dataframe_sheet.set_column('BD:BF', 20, format_currency_float)
+        dataframe_sheet.set_column('BG:BH', 20, format_date)
+        dataframe_sheet.set_column('BI:BK', 20, format_percentage)
+        dataframe_sheet.set_column('BL:BN', 20, format_currency_float)
+        dataframe_sheet.set_column('BO:BP', 20, format_date)
+        dataframe_sheet.set_column('BQ:BS', 20, format_percentage)
+        dataframe_sheet.set_column('BT:BV', 20, format_currency_float)
+        dataframe_sheet.set_column('BW:BX', 20, format_date)
+        dataframe_sheet.set_column('BY:CA', 20, format_percentage)
+        dataframe_sheet.set_column('CB:CD', 20, format_currency_float)
+        dataframe_sheet.set_column('CE:CF', 20, format_date)
+        dataframe_sheet.set_column('CG:CI', 20, format_percentage)
+        dataframe_sheet.set_column('CJ:CL', 20, format_currency_float)
+        dataframe_sheet.set_column('CM:CN', 20, format_date)
+        dataframe_sheet.set_column('CO:CQ', 20, format_percentage)
+        dataframe_sheet.set_column('CR:CT', 20, format_currency_float)
+        dataframe_sheet.set_column('CU:CV', 20, format_date)
+        dataframe_sheet.set_column('CW:FD', 20, format_font)

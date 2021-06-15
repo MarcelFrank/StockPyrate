@@ -9,6 +9,7 @@ class StockObject():
         self.name = name
         self.index = ""
         self.symbol = ""
+        self.sector = ""
         self.id = int(0)
         self.overview_key_facts = {}
         self.overview_yahoo_statistics = {}
@@ -18,6 +19,7 @@ class StockObject():
         self.prices_daily = []
         self.prices_weekly = []
         self.prices_quarterly = []
+        self.time_series_dataframe = pd.DataFrame()
         self.dividend_history = []
         self.dividend_rate = float(0)
         self.dividend_rate_hypothetic = float(0)
@@ -33,6 +35,7 @@ class StockObject():
         self.market_capitalization_daily = []
         self.market_capitalization_20_days = int(0)
         self.market_capitalization_quarterly = []
+        self.market_capitalization_all_shares_daily = []
         self.prices_with_delta_by_timestamp = {}
         self.prices_with_delta_by_row = {}
         self.dataframes_for_xlsx_export = {}
@@ -43,6 +46,8 @@ class StockObject():
         status_messages.status(212)
         self.symbol = share["symbol"] 
         status_messages.status(213)
+        self.sector = share["sector"]
+        status_messages.status(223)
         self.index = share["index"]
         status_messages.status(214)
         self.prices_daily = share["stock_price_weeks"]
@@ -95,54 +100,79 @@ class StockObject():
         self.overview_key_facts = {
             "Abruf": datetime.now().date(),
             "Index": str(self.index).upper(),
+            "Branche": str(self.sector),
             "Kurs": self.prices_daily[0][1],
             "Dividende": self.dividend_history[0][1],
             "Abschlagsdatum": self.dividend_history[0][0],
-            "Dividendenrendite": self.dividend_rate,
-            "Div.r. hypot.": self.dividend_rate_hypothetic,
+            "Dividendenrendite (letzte Dividende)": self.dividend_rate,
+            "Dividendenrendite (erwartete Dividende)": self.dividend_rate_hypothetic,
             "Dividende/Ex-Tag erholt am": self.dividend_race_to_recover["recovery_date"],
-            "Tage für Erholung (0 = fail)": self.dividend_race_to_recover["recovery_timedelta"],
-            "Kurs nach Erholung": self.dividend_race_to_recover["recovery_price"],
-            "Delta nach Erholung": self.dividend_race_to_recover["recovery_pricedelta"],
+            "Tage für Erholung (-1 = nicht geschafft)": self.dividend_race_to_recover["recovery_timedelta"],
+            "Kurs vor/nach Erholung": self.dividend_race_to_recover["recovery_price"],
+            "Delta vor/nach Erholung": self.dividend_race_to_recover["recovery_pricedelta"],
             "Ex-Tag (YStats)": self.overview_ex_date,
-            "Marktkapitalisierung": self.market_capitalization_daily[0][1],
-            "Marktkapita. 20T": self.market_capitalization_20_days,
-            "Börsenumsatz 12M": self.volumes_transaction_one_year_sum,
-            "Börsenumsatz 20T": self.volumes_transaction_20_days,
-            "Freefloat-Aktien": self.overview_shares_freefloat,
-            "Aktien im Umlauf": self.overview_shares_total
+            "Marktkapitalisierung - alle Aktien": self.market_capitalization_all_shares_daily[0][1],
+            "Marktkapitalisierung - Free Float": self.market_capitalization_daily[0][1],
+            #"Marktkapita. 20T FF": self.market_capitalization_20_days,
+            "Börsenumsatz 12 Monate (Summe) - Freefloat": self.volumes_transaction_one_year_sum,
+            "Börsenumsatz 20 Tage (Durchschnitt) - Freefloat": self.volumes_transaction_20_days,
+            "Anzahl aller Aktien im Umlauf": self.overview_shares_total,
+            "Anzahl der Freefloat-Aktien": self.overview_shares_freefloat
             }
 
     def compute_race_to_recuperate_dividend(self):
-        # This comparison is based on weekly price table (daily table is not availabe for a full years), this lowers accuracy slightly.
-        dividend = self.dividend_history[0][1]
-        dividend_date = self.dividend_history[0][0]
-        if self.dividend_history[0][0].year == datetime.now().year:                        
-            for line in self.prices_weekly[::-1]:
-                competitive_price = line[1]
-                if line[0] >= dividend_date:
-                    break
-            for line in self.prices_weekly[::-1]:
-                if line[0].year >= datetime.now().year and line[0] > dividend_date and line[1] > float(dividend + competitive_price):
-                    race_won_date = line[0]
-                    race_won_price = line[1]
-                    time_passed = (race_won_date - dividend_date).days
-                    break
-                else:
-                    race_won_date = datetime.strptime("01.01.1980", "%d.%m.%Y").date()
-                    race_won_price = 0
-                    time_passed = 0
-        else:
+        
+        amount_of_last_dividend_payment = self.dividend_history[0][1]
+        year_of_last_dividend_payment = self.dividend_history[0][0].year
+
+        if amount_of_last_dividend_payment > 0 and year_of_last_dividend_payment >= datetime.now().year:
+            dividend_date = self.dividend_history[0][0]
+            dividend_date_match_in_prices_daily = False
             race_won_date = datetime.strptime("01.01.1980", "%d.%m.%Y").date()
             race_won_price = 0
             time_passed = 0
-        self.dividend_race_to_recover["recovery_date"] = race_won_date
-        self.dividend_race_to_recover["recovery_price"] = race_won_price
-        self.dividend_race_to_recover["recovery_timedelta"] = int(time_passed)
-        if time_passed > 0:
-            self.dividend_race_to_recover["recovery_pricedelta"] = float((race_won_price/competitive_price)-1)
+
+            for date, price in self.prices_daily[::-1]:
+                competitive_price = price # Note: closing price before ex day
+                if date == dividend_date:
+                    dividend_date_match_in_prices_daily = True
+                    break
+            if dividend_date_match_in_prices_daily == True:
+                for date, price in self.prices_daily[::-1]:
+                    if date > dividend_date and price > competitive_price:
+                        race_won_date = date
+                        race_won_price = price
+                        time_passed = (race_won_date - dividend_date).days
+                        break
+
+            if dividend_date_match_in_prices_daily == False:
+                for date, price in self.prices_weekly[::-1]:
+                    competitive_price = price # Note: Not neat-sharp, comparison is done with the last availabe week end price tag before ex day.
+                    if date >= dividend_date:
+                        break
+                for date, price in self.prices_weekly[::-1]:
+                    if date > dividend_date and price > competitive_price:
+                        race_won_date = date
+                        race_won_price = price
+                        time_passed = (race_won_date - dividend_date).days
+                        break
+                
+            if time_passed > 0:
+                self.dividend_race_to_recover["recovery_date"] = race_won_date
+                self.dividend_race_to_recover["recovery_price"] = race_won_price
+                self.dividend_race_to_recover["recovery_timedelta"] = int(time_passed)
+                self.dividend_race_to_recover["recovery_pricedelta"] = float((race_won_price/competitive_price)-1)
+            else:
+                self.dividend_race_to_recover["recovery_date"] = datetime.strptime("01.01.1980", "%d.%m.%Y").date()
+                self.dividend_race_to_recover["recovery_price"] = float(-1)
+                self.dividend_race_to_recover["recovery_timedelta"] = -1
+                self.dividend_race_to_recover["recovery_pricedelta"] = float((self.prices_daily[0][1]/competitive_price)-1)
+        
         else:
-            self.dividend_race_to_recover["recovery_pricedelta"] = float(0)
+            self.dividend_race_to_recover["recovery_date"] = datetime.strptime("01.01.1980", "%d.%m.%Y").date()
+            self.dividend_race_to_recover["recovery_price"] = float(-1)
+            self.dividend_race_to_recover["recovery_timedelta"] = -1
+            self.dividend_race_to_recover["recovery_pricedelta"] = float(-1)
 
     def assign_overview_ex_date(self):
         if self.overview_yahoo_statistics["Ex-Dividendendatum"] != "N/A":
@@ -158,7 +188,7 @@ class StockObject():
         year_of_last_dividend_payment = self.dividend_history[0][0].year
         if datetime.now().year == year_of_last_dividend_payment:
             if self.dividend_history[0][1] > 0:
-                if self.index in ["dow", "nasdaq", "nyse"]:
+                if self.index in ["dow", "nasdaq", "nyse", "shorties"]:
                     dividend_last_amount = self.dividend_history[0][1]*4
                     if self.name == "realtyincome":
                         dividend_last_amount = dividend_last_amount*3
@@ -172,7 +202,7 @@ class StockObject():
                         dividend_last_amount = self.dividend_history[0][1] + self.dividend_history[1][1] + self.dividend_history[2][1] + self.dividend_history[3][1]
                     elif self.name in ["bp", "royaldutchshella", "royaldutchshellb", "britishamericantobacco"]:
                         dividend_last_amount = self.dividend_history[0][1]*4
-                elif self.index in ["dax", "mdax", "sdax", "scale", "cac"]:
+                elif self.index in ["dax", "mdax", "sdax", "scale", "cac", "asianstockexchanges", "europeanstockexchanges", "undefined"]:
                     dividend_last_amount = self.dividend_history[0][1]
                 self.dividend_rate = float(dividend_last_amount/self.prices_daily[0][1])
                 self.dividend_rate_hypothetic = float(dividend_last_amount/self.prices_daily[0][1])
@@ -210,12 +240,16 @@ class StockObject():
                 self.volumes_transaction_quarterly += [[self.prices_quarterly[i][0], transaction_sum]]
             else:
                 status_messages.status(259)
-        self.volumes_transaction_quarterly = self.volumes_transaction_quarterly[2:]
+        self.volumes_transaction_quarterly = self.volumes_transaction_quarterly[1:] # [2:] for better looks
 
     def compute_volume_transaction_one_year(self):
         status_messages.status(253)
 
-        datetime_object_one_year_ago = self.prices_weekly[0][0] + timedelta(days=-365)
+        if self.prices_weekly[0][0] < (datetime.now().date() + timedelta(days=-365)):
+            datetime_object_one_year_ago = self.prices_weekly[0][0] + timedelta(days=-365)
+        else:
+            datetime_object_one_year_ago = self.prices_weekly[-1][0] + timedelta(days=+7)
+
         set_position_to_one_year_ago = 0
         for i in range(0, len(self.prices_weekly)):
             if self.prices_weekly[i][0] < datetime_object_one_year_ago:
@@ -260,6 +294,21 @@ class StockObject():
             status_messages.status(258)
             self.market_capitalization_daily = [[self.prices_daily[0][0], int(1)]]
             self.market_capitalization_20_days = int(1)
+
+    def compute_market_capitalization_all_shares_daily(self):
+        if self.overview_shares_total > 0:
+            for i in range(0, len(self.prices_daily)):
+                self.market_capitalization_all_shares_daily += [[self.prices_daily[i][0], int(self.prices_daily[i][1]*self.overview_shares_total)]]
+                        
+        elif str(self.overview_yahoo_statistics["Marktkap. (im Tagesverlauf)"][-1]) == "M":
+            self.market_capitalization_all_shares_daily = [[self.prices_daily[0][0], int(float(str(self.overview_yahoo_statistics["Marktkap. (im Tagesverlauf)"]).replace("M", "").replace(",", "."))*1000000+1)]]
+            
+        elif str(self.overview_yahoo_statistics["Marktkap. (im Tagesverlauf)"][-1]) == "B":
+            self.market_capitalization_all_shares_daily = [[self.prices_daily[0][0], int(float(str(self.overview_yahoo_statistics["Marktkap. (im Tagesverlauf)"]).replace("B", "").replace(",", "."))*1000000000+1)]]
+            
+        else:
+            status_messages.status(258)
+            self.market_capitalization_all_shares_daily = [[self.prices_daily[0][0], int(1)]]
 
     def compute_market_capitalization_quarterly(self):
         for i in range(0, len(self.prices_quarterly)):
@@ -403,10 +452,10 @@ class StockObject():
             format_thousands = workbook.add_format({'num_format': '#,##0', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
             format_percentage = workbook.add_format({'num_format': '[Color 23]#,##0.00%;[RED]-#,##0.00%', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
             format_font = workbook.add_format({'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
-            if self.index in ["dax", "mdax", "sdax", "xetra", "germany", "scale", "ibex", "cac"]:
+            if self.index in ["dax", "mdax", "sdax", "europeanstockexchanges", "scale", "ibex", "cac", "undefined"]:
                 format_currency_int = workbook.add_format({'num_format': '#,##0 [$€-407]', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
                 format_currency_float = workbook.add_format({'num_format': '#,##0.00 [$€-407]', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
-            elif self.index in ["dow", "nasdaq", "nyse"]:
+            elif self.index in ["dow", "nasdaq", "nyse", "shorties", "asianstockexchanges"]:
                 format_currency_int = workbook.add_format({'num_format': '#,##0 [$$-409]', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
                 format_currency_float = workbook.add_format({'num_format': '#,##0.00 [$$-409]', 'font_name': 'Arial', 'font_size': '10', 'align': 'right', 'valign': 'vcenter'})
             elif self.index in ["ftse"]:
@@ -417,33 +466,33 @@ class StockObject():
                 sheet = writer.sheets[sheet_name]
                 sheet.set_column('A:A', 50)
                 sheet.set_column('B:B', 20, format_font)
-                sheet.conditional_format('B4:B5', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
-                sheet.conditional_format('B7:B8', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})
-                sheet.conditional_format('B10', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_thousands})
-                sheet.conditional_format('B11', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_currency_float})
-                sheet.conditional_format('B12', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})
-                sheet.conditional_format('B13:B16', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_int})
-                sheet.conditional_format('B17:B19', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_thousands})
-                sheet.conditional_format('B20:B22', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
-                sheet.conditional_format('B23:B25', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
-                sheet.conditional_format('B28:B30', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
-                sheet.conditional_format('B31:B33', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
-                sheet.conditional_format('B36:B38', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
-                sheet.conditional_format('B39:B41', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
-                sheet.conditional_format('B44:B46', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
-                sheet.conditional_format('B47:B49', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
-                sheet.conditional_format('B52:B54', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
-                sheet.conditional_format('B55:B57', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
-                sheet.conditional_format('B60:B62', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
-                sheet.conditional_format('B63:B65', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
-                sheet.conditional_format('B68:B70', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
-                sheet.conditional_format('B71:B73', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
-                sheet.conditional_format('B76:B78', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
-                sheet.conditional_format('B79:B81', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
-                sheet.conditional_format('B84:B86', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
-                sheet.conditional_format('B87:B89', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
-                sheet.conditional_format('B92:B94', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
-                sheet.conditional_format('B95:B97', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
+                sheet.conditional_format('B5:B6', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
+                sheet.conditional_format('B8:B9', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})
+                sheet.conditional_format('B11', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_thousands})
+                sheet.conditional_format('B12', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_currency_float})
+                sheet.conditional_format('B13', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})
+                sheet.conditional_format('B15:B17', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_int})
+                sheet.conditional_format('B18:B20', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_thousands})
+                sheet.conditional_format('B21:B23', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
+                sheet.conditional_format('B24:B26', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
+                sheet.conditional_format('B29:B31', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
+                sheet.conditional_format('B32:B34', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
+                sheet.conditional_format('B37:B39', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
+                sheet.conditional_format('B40:B42', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
+                sheet.conditional_format('B45:B47', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
+                sheet.conditional_format('B48:B50', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
+                sheet.conditional_format('B53:B55', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
+                sheet.conditional_format('B56:B58', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
+                sheet.conditional_format('B61:B63', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
+                sheet.conditional_format('B64:B66', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
+                sheet.conditional_format('B69:B71', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
+                sheet.conditional_format('B72:B74', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
+                sheet.conditional_format('B77:B79', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
+                sheet.conditional_format('B80:B82', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
+                sheet.conditional_format('B85:B87', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
+                sheet.conditional_format('B88:B90', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
+                sheet.conditional_format('B93:B95', {'type': 'cell', 'criteria': 'between', 'minimum': -1, 'maximum': 100, 'format': format_percentage})          
+                sheet.conditional_format('B96:B98', {'type': 'cell', 'criteria': '>=', 'value': 0, 'format': format_currency_float})
 
             def draw_sheet(sheet_name, column_name, chart_type, chart_title, row_count, format_type, y_axis_min, y_axis_max):
                 sheet = writer.sheets[sheet_name]
@@ -457,8 +506,8 @@ class StockObject():
                 chart = workbook.add_chart({'type': chart_type})
                 chart.set_title ({'name': chart_title})
                 chart.set_style(2)
-                chart.set_size({'width': 1280, 'height': 720})
-                chart.set_x_axis({'name': 'Datum', 'name_font': {'size': 12, 'bold': True}})
+                chart.set_size({'width': 800, 'height': 450})
+                chart.set_x_axis({'name': 'Datum', 'num_format': 'DD.MM.YYYY', 'date_axis': True, 'name_font': {'size': 12, 'bold': True}})
                 chart.set_y_axis({'min': y_axis_min, 'max': y_axis_max, 'name': column_name, 'name_font': {'size': 12, 'bold': True}})
                 chart.add_series({'values': "="+"'"+sheet_name+"'"+"!$C2:$C"+row_count, 'categories': "="+"'"+sheet_name+"'"+"!$B2:$B"+row_count, 'name': "="+"'"+sheet_name+"'"+"!$C$1"})
                 sheet.insert_chart('G2', chart)
@@ -506,4 +555,3 @@ class StockObject():
                 round(int(self.dataframes_for_xlsx_export["stock_market_capitalization_free_float_quarterly"]['Marktkapitalisierung'].min()), -len(str(int(self.dataframes_for_xlsx_export["stock_market_capitalization_free_float_quarterly"]['Marktkapitalisierung'].min())))+1),
                 round(int(self.dataframes_for_xlsx_export["stock_market_capitalization_free_float_quarterly"]['Marktkapitalisierung'].max()), -len(str(int(self.dataframes_for_xlsx_export["stock_market_capitalization_free_float_quarterly"]['Marktkapitalisierung'].max())))+1)
                 )
-            status_messages.sneak_preview(self.dataframes_for_xlsx_export)
