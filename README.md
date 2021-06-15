@@ -11,9 +11,9 @@ StockPyrate is a python script to gather stock information about prices, dividen
 - Example of Console Output: Go to [txt file](/demo/console_output.txt).
 - Example of XLSX Output: Go to [xlsx file](/demo/DOW_ID_INTC_2021-06-15_intel.xlsx).
 - Screenshot of merged xlsx files for all parsed stocks:<br/><br />
-![StockPyrate.py](https://github.com/MarcelFrank/StockPyrate/blob/update-2021-sectors-and-fixes/demo/preview-stockpyrate-merged-xlsx-file.png)<br /> <br/>
+![StockPyrate.py](https://github.com/MarcelFrank/StockPyrate/blob/main/demo/preview-stockpyrate-merged-xlsx-file.png)<br /> <br/>
 - Screenshot of single xlsx files for each stock:<br/><br />
-![StockPyrate.py](https://github.com/MarcelFrank/StockPyrate/blob/update-2021-sectors-and-fixes/demo/preview-stockpyrate-transaction-volume.png)
+![StockPyrate.py](https://github.com/MarcelFrank/StockPyrate/blob/main/demo/preview-stockpyrate-transaction-volume.png)
 
 ## Important (cookie required)
 - The script relies on the slow, old-fashioned approach of web scraping instead of rapid API calls.
