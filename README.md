@@ -1,10 +1,19 @@
 ## StockPyrate
 A Yahoo Finance stock crawler for financial data analysis and visualization with Excel/XSLX export.
 
-![StockPyrate.py](https://github.com/MarcelFrank/StockPyrate/blob/main/demo/screenshot-from-example-xlsx-02.png)
-
 ## About
 StockPyrate is a python script to gather stock information about prices, dividends, volumes, market caps and corporate statistics at Yahoo Finance with a focus on components of DOW JONES, NASDAQ 100, DAX 30, MDAX, SDAX, IBEX 35, CAC 40 and FTSE 100. As a user you enter a list of stocks or indices to be crawled, parsed, analyzed and exported. The script returns xls files for each stock and/or index components with metrics and visualization for e. g. current dividend yields or delta percentages of highs and lows in predefined time periods. It also provides a function to concatenate all parsed stocks into a single xlsx file to get a bird's-eye-view on all stocks at one place. Purpose is to enhance data, automate the time-consuming work of screening stock information and hereby make investment decisions easier and faster for individual investors.
+
+## Changelog
+- Latest updates can be found [here](CHANGELOG.md).
+
+## Illustration
+- Example of Console Output: Go to [txt file](/demo/console_output.txt).
+- Example of XLSX Output: Go to [xlsx file](/demo/DOW_ID_INTC_2021-06-15_intel.xlsx).
+- Screenshot of merged xlsx files for all parsed stocks:<br/><br />
+![StockPyrate.py](https://github.com/MarcelFrank/StockPyrate/blob/update-2021-sectors-and-fixes/demo/preview-stockpyrate-merged-xlsx-file.png)<br /> <br/>
+- Screenshot of single xlsx files for each stock:<br/><br />
+![StockPyrate.py](https://github.com/MarcelFrank/StockPyrate/blob/update-2021-sectors-and-fixes/demo/preview-stockpyrate-transaction-volume.png)
 
 ## Important (cookie required)
 - The script relies on the slow, old-fashioned approach of web scraping instead of rapid API calls.
@@ -39,30 +48,34 @@ def create_cookie():
 ```
 # Define your stock names to parse as a list of strings. Done!
 
-custom_filter["stocks_whitelist"] = ["intel"]  
+custom_filter["whitelist_stocks"]  = ["intel", "qualcomm"]
+custom_filter["whitelist_sectors"] = ["semiconductors", "gaming"]
+
 ```
 
-## Demo and Setup
-Take a look into the /demo folder to watch StockPyrate.py crawling and parsing "Intel" (or start animated GIF [here](demo/demo.gif)) and the corresponding exported XLSX file. Apart from module requirements you initially need to set up your individual cookie - and you are ready to go ([cf. setup.md](setup/setup.md)).
+## Setup
+Apart from module requirements you initially need to set up your individual cookie - and you are ready to go ([cf. setup.md](setup/setup.md)).
 
 ## Feature List
 
 **Crawling and Parsing**
 - Whitelist filter for stock symbols
+- Whitelist filter for sectors
 - Blacklist filter for stock symbols
 - Whitelist filter for stock indices
 - Blacklist filter for stock indices
 - Timer in seconds for average crawling delay
+- Estimated time needed to for crawling
 - Status messages steadily commenting on what is going on
 - Error handling primarily to avoid stalling ("in case of misunderstanding, read on!")
 - Automated user-friendly file naming convention for xls export
 - Custom filename and folder for xlsx concatenation procedure
-- Predefined list of stocks
+- Predefined list of stocks now with more than 600 stocks with sector information
 - Once started, crawl, parse, analyze and export in one shot
-- Nice loops in range of your decent purposes
 
 **Financial Data Analysis and Visualization**
 - Current stock price
+- Sector information
 - Historical stock prices
 - Current dividend
 - Current dividend yield
